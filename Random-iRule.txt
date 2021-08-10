@@ -1,0 +1,146 @@
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when CLIENT_ACCEPTED {
+ if {![regexp {^(.+)-[^/-]+-[^/-]+$} [virtual] myvs mypfx]} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 0 "CLIENT_ACCEPTED cannot parse virtual-server name (client [IP::client_addr])"
+  reject
+  return
+ }
+
+ set ctx(log) 0
+
+ set qry [expr {([set af [IP::version]] == 4) ? "-a" : "-aaaa"}]
+
+ sharedvar XPHOST
+
+ set dom "?" ; set addr "?" ; set port "?"
+
+ set prev_server ""
+} ; #CLIENT_ACCEPTED
+
+when HTTP_PROXY_REQUEST {
+ if {[HTTP::method] eq "CONNECT"} {
+  # HTTP Profile will forward via tunnel to transparent proxy
+
+  # ?? perhaps we could pass target hostname to transparent
+  # proxy for use like SNI, in case client doesn't supply
+  # SNI (with the optimization that since we resolve name,
+  # DDB need not resolve it) ??
+
+  if {$prev_server ne ""} {
+   if {![catch {IP::server_addr} tmp] && ($tmp ne "0")} {
+    LB::detach
+   }
+  }
+  return
+ }
+
+ #otherwise
+ for {} 1 {break} {
+  if {([set dom [string tolower [URI::host [HTTP::uri]]]] eq "") ||
+      ([string length $dom] > 253) ||
+      ![regexp {^((\x5b[0-9a-f:.]{1,45}\x5d)|[a-z0-9.-]+)$} $dom]} {
+   #(we only check for really arrogant attacks on our resolver)
+   set dom [string range $dom 0 253]
+   set e "Cannot decode explicit-proxy request hostname"
+   set rslt 400
+   break
+  }
+
+  if {[string range $dom 0 0] eq "\x5b"} {
+   set addr [string range $dom 1 end-1]
+
+   ##############################################################
+   # we should be able to support IPv4 client to IPv6 server    #
+   # but that will require some additional code                 #
+   #                                                            #
+
+   if {$af == 4} {
+    set e "Cannot explicit-proxy IPv4 client to IPv6 literal host"
+    set rslt 501
+    break
+   }
+
+   #                                                            #
+   ##############################################################
+  } elseif {[regexp {^([0-9]{1,3}[.]){3}[0-9]{1,3}$} $dom]} {
+   set addr $dom
+  } elseif {[string is integer -strict $dom]} {
+   set e "Explicit proxy to pure numeric IPv4 literal forbidden"
+   set rslt 403
+   break
+  } elseif {[catch "RESOLV::lookup ${qry} ${dom}" addrs] ||
+            ([set addr [lindex $addrs 0]] eq "")} {
+   set e "Cannot resolve hostname '${dom}' in explicit-proxy request"
+   set rslt 404
+   break
+  }
+
+  if {( ($af == 4) &&
+        ( [IP::addr $addr equals 0.0.0.0/32] ||
+          [IP::addr $addr equals 127.0.0.0/8] ||
+          [IP::addr $addr equals 169.254.0.0/16] ||
+          [IP::addr $addr equals 224.0.0.0/3] ) ) ||
+      ( ($af == 6) &&
+        ( ([string first ":" $addr] < 0) ||
+          [IP::addr $addr equals ::/16] ||
+          [IP::addr $addr equals fe80::/10] ||
+          [IP::addr $addr equals ff00::/8] ) )} {
+   # we refuse loopback or multicast targets, and IPv4 within IPv6 brackets
+   set e "Explicit proxy to non-unicast IP address forbidden"
+   set rslt 403
+   break
+  }
+
+  # iRules URI::port command returns 80/443 for empty http/https port
+  if {[set port [URI::port [HTTP::uri]]] eq "0"} {
+   set e "Explicit proxy server port not recognized"
+   set rslt 403
+   break
+  }
+  set server "${dom}:${port}"
+
+  if {([set h [string tolower [HTTP::host]]] ne "") &&
+      ( ([string length $h] > 259) ||
+        ( (([set x [string first "\x5d" $h]] > 0) || [set x 1]) &&
+          ( (([string first ":" $h $x] > 0) || ([append h ":80"] ne "")) &&
+            ($h ne $server) ) ) )} {
+   # someone is trying to trick us
+   set e "Explicit-proxy request hostname and Host header disagree"
+   set rslt 403
+   break
+  }
+
+  if {$server ne $prev_server} {
+   if {($prev_server ne "") &&
+       ![catch {IP::server_addr} tmp] && ($tmp ne "0")} {
+    LB::detach
+   }
+   set prev_server $server
+
+   # inform transparent virtual of requested destination
+   set XPHOST $dom
+
+   virtual "${mypfx}-in-t-[IP::version]" $addr $port
+  }
+  return
+ } ; #do-once
+
+ if {[info exists e] && ($e ne "")} {
+  if {[info exists rslt] &&
+      ( [catch {HTTP::respond $rslt content "${e}.\n" Content-Type "text/plain; charset=UTF8" Connection close}] ||
+        [catch {HTTP::close}] )} {
+   reject
+  }
+  if {$ctx(log)} {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "HTTP_PROXY_REQUEST ${e} ([IP::client_addr]_[TCP::client_port] to '${dom}' ${addr}_${port})"
+  }
+ }
+} ; #HTTP_PROXY_REQUEST
+
+when HTTP_REQUEST {
+ virtual "${mypfx}-in-t-[IP::version]" [HTTP::proxy addr] [HTTP::proxy port]
+}

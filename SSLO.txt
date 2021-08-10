@@ -1,0 +1,2772 @@
+#TMSH-VERSION: 15.1.0.4
+
+apm log-setting /Common/default-sslo-log-setting {
+    access {
+        general-log {
+            log-level {
+                access-control err
+                access-per-request err
+                sso err
+                swg err
+            }
+            publisher /Common/sys-sslo-publisher
+            type ssl-orchestrator
+        }
+    }
+    description "Default log setting for all SSLO messages."
+    url-filters {
+        urlf {
+            publisher /Common/sys-sslo-publisher
+        }
+    }
+}
+apm log-setting /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-log-setting {
+    access {
+        general-log {
+            log-level {
+                access-control err
+                access-per-request err
+                ssl-orchestrator info
+            }
+            publisher /Common/sys-sslo-publisher
+            type ssl-orchestrator
+        }
+    }
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    url-filters {
+        urlf {
+            publisher /Common/sys-sslo-publisher
+        }
+    }
+}
+apm aaa active-directory /Common/f5labs_ad_aaa {
+    admin-encrypted-password $M$Tu$XLR57gSRxiEPEXN1GGWv3A==
+    admin-name Administrator
+    domain f5labs.com
+    domain-controller dc1.f5labs.com
+    use-pool disabled
+}
+apm epsec epsec-package /Common/epsec-1.0.0-718.0.iso {
+    cache-path /config/filestore/files_d/Common_d/epsec_package_d/:Common:epsec-1.0.0-718.0.iso_62969_1
+    oesis-version 4.3.183.0
+    revision 1
+    version 1.0.0-718.0
+}
+apm epsec epsec-package /Common/epsec-1.0.0-804.0.iso {
+    cache-path /config/filestore/files_d/Common_d/epsec_package_d/:Common:epsec-1.0.0-804.0.iso_63017_1
+    oesis-version 4.3.499.0
+    revision 1
+    version 1.0.0-804.0
+}
+apm epsec epsec-package /Common/epsec-1.0.0-810.0.iso {
+    cache-path /config/filestore/files_d/Common_d/epsec_package_d/:Common:epsec-1.0.0-810.0.iso_64239_1
+    oesis-version 4.3.512.0
+    revision 1
+    version 1.0.0-810.0
+}
+apm epsec epsec-package /Common/epsec-1.0.0-846.0.iso {
+    cache-path /config/filestore/files_d/Common_d/epsec_package_d/:Common:epsec-1.0.0-846.0.iso_64738_1
+    oesis-version 4.3.716.0
+    revision 1
+    version 1.0.0-846.0
+}
+apm epsec epsec-package /Common/epsec-1.0.0-892.0.iso {
+    cache-path /config/filestore/files_d/Common_d/epsec_package_d/:Common:epsec-1.0.0-892.0.iso_66064_1
+    oesis-version 4.3.1158.0
+    revision 1
+    version 1.0.0-892.0
+}
+apm ntlm machine-account /Common/sslo1.f5labs.com_ntlm {
+    domain-controller-fqdn dc1.f5labs.com
+    domain-fqdn f5labs.com
+    last-password-update-time 2021-01-21:09:40:47
+    machine-account-name SSLO1
+    machine-account-password $M$IF$G9pX6rKO84xm3pOnB5AeicGa3a7CX+6i6upWi5S1fIY=
+    netbios-domain-name F5LABS
+}
+apm ntlm ntlm-auth /Common/f5labs.com_ntlm_aaa {
+    dc-fqdn-list { dc1.f5labs.com }
+    machine-account-name /Common/sslo1.f5labs.com_ntlm
+    service-id 6
+}
+apm policy access-policy /Common/f5labs-ntlm-ap {
+    default-ending /Common/f5labs-ntlm-ap_end_deny
+    items {
+        /Common/f5labs-ntlm-ap_act_active_directory_query { }
+        /Common/f5labs-ntlm-ap_act_ntlm_auth { }
+        /Common/f5labs-ntlm-ap_end_allow { }
+        /Common/f5labs-ntlm-ap_end_deny { }
+        /Common/f5labs-ntlm-ap_ent { }
+    }
+    start-item /Common/f5labs-ntlm-ap_ent
+}
+apm policy access-policy /Common/ssloDefault_accessPolicy {
+    caption general
+    default-ending /Common/ssloDefault_end_allow
+    items {
+        /Common/ssloDefault_end_allow { }
+        /Common/ssloDefault_end_deny { }
+        /Common/ssloDefault_ent { }
+    }
+    start-item /Common/ssloDefault_ent
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Categorization
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_2 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_irule_event { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_l7_protocol_lookup { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_ssl_check { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_variable_assign { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out {
+            priority 32
+        }
+    }
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Finance_Bypass
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_act_category_branching { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_mac_categorization { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out {
+            priority 4
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out_failed {
+            priority 5
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicitfinance_bypass_act_ip_protocol_lookup { }
+    }
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption general
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ip_protocol_lookup { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_protocol_lookup { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_session_check { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_1 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_2 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow {
+            priority 8
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_redirect {
+            priority 7
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_reject {
+            priority 7
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_finance_bypass { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_pinners_rule { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_all_services_1 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_ciscofp_tap_1 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_ciscofp_tap_2 { }
+    }
+    macros { /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_macro_policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_macro_policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_macro_policy /Common/
+ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_macro_policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_macro_policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_macro_policy /Common/ssloP_f5labs_explicit.app/ssl
+oP_f5labs_explicit_categorization_macro_policy }
+    per-req-policy-properties {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy {
+            incomplete-action allow
+        }
+    }
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_ent
+    type ssl-orchestrator-policy
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Pinners_Rule
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_sni_category_lookup { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_ssl_check { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out {
+            priority 4
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out_failed {
+            priority 5
+        }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicitpinners_rule_act_ip_protocol_lookup { }
+    }
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloS_CiscoFP
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_ip_family_check { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_protocol_lookup_4 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_protocol_lookup_6 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_t { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_u { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_t { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_u { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out {
+            priority 1
+        }
+    }
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloS_SquidProxy
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_ip_family_check { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_protocol_lookup_4 { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_svc_connect_4_t { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_out {
+            priority 1
+        }
+    }
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloSC_All_Services
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_act_variable_assign { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_mac_sslos_ciscofp { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_mac_sslos_squidproxy { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_out {
+            priority 1
+        }
+    }
+    oneshot-macro true
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_macro_policy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloSC_CiscoFP_TAP
+    default-ending /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_out
+    items {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_act_variable_assign { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_ent { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_mac_sslos_ciscofp { }
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_out {
+            priority 1
+        }
+    }
+    oneshot-macro true
+    start-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_ent
+    type ssl-orchestrator-policy-macro
+}
+apm policy access-policy /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_accessPolicy {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    caption general
+    default-ending /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_end_allow
+    items {
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_end_allow { }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_ent { }
+    }
+    start-item /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_ent
+}
+apm policy customization-group /Common/f5labs-ntlm-ap_end_deny_ag {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:f5labs-ntlm-ap_end_deny_ag_140519_1
+    revision 1
+    source /Common/modern
+    type logout
+}
+apm policy customization-group /Common/f5labs-ntlm-ap_eps {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:f5labs-ntlm-ap_eps_140555_1
+    revision 1
+    source /Common/modern
+    type eps
+}
+apm policy customization-group /Common/f5labs-ntlm-ap_errormap {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:f5labs-ntlm-ap_errormap_140552_1
+    revision 1
+    source /Common/modern
+    type errormap
+}
+apm policy customization-group /Common/f5labs-ntlm-ap_framework_installation {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:f5labs-ntlm-ap_framework_installation_140558_1
+    revision 1
+    source /Common/modern
+    type framework-installation
+}
+apm policy customization-group /Common/f5labs-ntlm-ap_general_ui {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:f5labs-ntlm-ap_general_ui_140509_1
+    revision 1
+    source /Common/modern
+    type general-ui
+}
+apm policy customization-group /Common/f5labs-ntlm-ap_logout {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:f5labs-ntlm-ap_logout_140549_1
+    revision 1
+    source /Common/modern
+    type logout
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_eps {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_eps_88393_1
+    revision 1
+    source /Common/standard
+    type eps
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_errormap {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_errormap_88390_1
+    revision 1
+    source /Common/standard
+    type errormap
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_framework_installation {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_framework_installation_88396_1
+    revision 1
+    source /Common/standard
+    type framework-installation
+}
+apm policy customization-group /Common/ssloDefault_accessProfile_general_ui {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_accessProfile_general_ui_88384_1
+    revision 1
+    source /Common/standard
+    type general-ui
+}
+apm policy customization-group /Common/ssloDefault_end_deny_ag_logout {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_end_deny_ag_logout_88381_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/ssloDefault_logout {
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloDefault_logout_88387_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_eps {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_f5labs_explicit.app:ssloP_f5labs_explicit_per_req_policy_eps_140286_1
+    revision 1
+    source /Common/standard
+    type eps
+}
+apm policy customization-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_errormap {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_f5labs_explicit.app:ssloP_f5labs_explicit_per_req_policy_errormap_140283_1
+    revision 1
+    source /Common/standard
+    type errormap
+}
+apm policy customization-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_framework_installation {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_f5labs_explicit.app:ssloP_f5labs_explicit_per_req_policy_framework_installation_140289_1
+    revision 1
+    source /Common/standard
+    type framework-installation
+}
+apm policy customization-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_general_ui {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_f5labs_explicit.app:ssloP_f5labs_explicit_per_req_policy_general_ui_140277_1
+    revision 1
+    source /Common/standard
+    type general-ui
+}
+apm policy customization-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_logout {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:ssloP_f5labs_explicit.app:ssloP_f5labs_explicit_per_req_policy_logout_140280_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_accessProfile_errormap {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_f5labs_explicit.app:sslo_f5labs_explicit_accessProfile_errormap_140340_1
+    revision 1
+    source /Common/standard
+    type errormap
+}
+apm policy customization-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_framework_installation {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_f5labs_explicit.app:sslo_f5labs_explicit_framework_installation_140346_1
+    revision 1
+    source /Common/standard
+    type framework-installation
+}
+apm policy customization-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_general_ui {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_f5labs_explicit.app:sslo_f5labs_explicit_general_ui_140334_1
+    revision 1
+    source /Common/standard
+    type general-ui
+}
+apm policy customization-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_logout {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_f5labs_explicit.app:sslo_f5labs_explicit_logout_140337_1
+    revision 1
+    source /Common/standard
+    type logout
+}
+apm policy customization-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_unknown_customization {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    cache-path /config/filestore/files_d/Common_d/customization_group_d/:Common:sslo_f5labs_explicit.app:sslo_f5labs_explicit_unknown_customization_140343_1
+    revision 1
+    source /Common/standard
+    type eps
+}
+apm policy customization-group-set /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy {
+    accept-languages { en }
+    access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    customization-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_logout
+    customization-key e2b56a7254e87497c1e69111dcac8fa6
+    default-language en
+    eps-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_eps
+    errormap-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_errormap
+    framework-installation-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_framework_installation
+    general-ui-group /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_general_ui
+}
+apm policy customization-source /Common/modern { }
+apm policy customization-source /Common/standard { }
+apm policy policy-item /Common/f5labs-ntlm-ap_act_active_directory_query {
+    agents {
+        /Common/f5labs-ntlm-ap_act_active_directory_query_ag {
+            type aaa-active-directory
+        }
+    }
+    caption "AD Query"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/f5labs-ntlm-ap_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/f5labs-ntlm-ap_act_ntlm_auth {
+    caption "NTLM Auth Result"
+    color 1
+    item-type action
+    rules {
+        {
+            caption Successful
+            expression "expr {[mcget {session.ntlm.last.result}] == 1}"
+            next-item /Common/f5labs-ntlm-ap_act_active_directory_query
+        }
+        {
+            caption fallback
+            next-item /Common/f5labs-ntlm-ap_end_deny
+        }
+    }
+}
+apm policy policy-item /Common/f5labs-ntlm-ap_end_allow {
+    agents {
+        /Common/f5labs-ntlm-ap_end_allow_ag {
+            type ending-allow
+        }
+    }
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/f5labs-ntlm-ap_end_deny {
+    agents {
+        /Common/f5labs-ntlm-ap_end_deny_ag {
+            type ending-deny
+        }
+    }
+    caption Deny
+    color 2
+    item-type ending
+}
+apm policy policy-item /Common/f5labs-ntlm-ap_ent {
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/f5labs-ntlm-ap_act_ntlm_auth
+        }
+    }
+}
+apm policy policy-item /Common/ssloDefault_end_allow {
+    agents {
+        /Common/ssloDefault_end_allow_ag {
+            type ending-allow
+        }
+    }
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/ssloDefault_end_deny {
+    agents {
+        /Common/ssloDefault_end_deny_ag {
+            type ending-deny
+        }
+    }
+    caption Deny
+    color 2
+    item-type ending
+}
+apm policy policy-item /Common/ssloDefault_ent {
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloDefault_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_ag {
+            type category-lookup
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Category Lookup (SSL)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_2 {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_2_ag {
+            type category-lookup
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Category Lookup (HTTP Connect)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_irule_event {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_irule_event_ag {
+            type irule-event
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "HTTP Data Collector"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_variable_assign
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_l7_protocol_lookup {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_l7_protocol_lookup_ag {
+            type l7-protocol-lookup
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "L7 Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption HTTP
+            expression "expr { [mcget {perflow.l7_protocol_lookup.result}] == \"http\" }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_irule_event
+        }
+        {
+            caption "HTTP Connect"
+            expression "expr { [mcget {perflow.l7_protocol_lookup.result}] == \"http-connect\" }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_2
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_ssl_check {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_ssl_check_ag {
+            type ssl-check
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "SSL Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "SSL Found"
+            expression "expr { [mcget {perflow.ssl_check.ssl_found}] == 1 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_l7_protocol_lookup
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_variable_assign {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_variable_assign_ag {
+            type variable-assign
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Variable Assign"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_ssl_check
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_act_category_branching {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Category Branching"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "Category Match"
+            expression "expr { [mcget {perflow.category_lookup.result.categories}] contains \"| 68 |\" }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicitfinance_bypass_act_ip_protocol_lookup
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_mac_categorization {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Categorization
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_act_category_branching
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Pass
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out_failed {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Fail
+    color 2
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ip_protocol_lookup {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_protocol_lookup
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_reject
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_protocol_lookup {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_protocol_lookup_ag {
+            type l7-protocol-lookup
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "L7 Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption HTTP(S)
+            expression "expr { [mcget {perflow.l7_protocol_lookup.result}] == \"https\" || [mcget {perflow.l7_protocol_lookup.result}] == \"http\" }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_redirect
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_reject
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_session_check {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_session_check_ag {
+            type session-check
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Session Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "Session Found"
+            expression "expr { [mcget {perflow.session_check.session_found}] == 1 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_pinners_rule
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ip_protocol_lookup
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_1 {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_1_ag {
+            type ssl-bypass-set
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "SSL Bypass Set"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_ciscofp_tap_1
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_2 {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_2_ag {
+            type ssl-bypass-set
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "SSL Bypass Set"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_ciscofp_tap_2
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow_ag {
+            type ending-allow
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_redirect {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_redirect_ag {
+            type ending-redirect
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Redirect
+    color 16
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_reject {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_reject_ag {
+            type ending-reject
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Reject
+    color 2
+    item-type ending
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_session_check
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_finance_bypass {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Finance_Bypass
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_macro_policy
+    rules {
+        {
+            caption Pass
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_2
+        }
+        {
+            caption Fail
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_all_services_1
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_pinners_rule {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Pinners_Rule
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_macro_policy
+    rules {
+        {
+            caption Pass
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_1
+        }
+        {
+            caption Fail
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_finance_bypass
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_all_services_1 {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloSC_All_Services
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_ciscofp_tap_1 {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloSC_CiscoFP_TAP
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_mac_sslosc_ciscofp_tap_2 {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloSC_CiscoFP_TAP
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_sni_category_lookup {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_sni_category_lookup_ag {
+            type category-lookup
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Category Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "Category Match"
+            expression "expr { [mcget {perflow.category_lookup.result.categories}] contains \"| 1903 |\" }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_ssl_check {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_ssl_check_ag {
+            type ssl-check
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "SSL Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "SSL Found"
+            expression "expr { [mcget {perflow.ssl_check.ssl_found}] == 1 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_sni_category_lookup
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicitpinners_rule_act_ip_protocol_lookup
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Pass
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out_failed {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Fail
+    color 2
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_ip_family_check {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Version Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption IPv4
+            expression "expr { [ IP::version ] == 4 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_protocol_lookup_4
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_protocol_lookup_6
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_protocol_lookup_4 {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Protocol Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_t
+        }
+        {
+            caption UDP
+            expression "expr { [ IP::protocol ] == 17 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_u
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_protocol_lookup_6 {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Protocol Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_t
+        }
+        {
+            caption UDP
+            expression "expr { [ IP::protocol ] == 17 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_u
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_t {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_t_ag {
+            type service-connect
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Service Connect (ssloS_CiscoFP)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_u {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_u_ag {
+            type service-connect
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Service Connect (ssloS_CiscoFP)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_t {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_t_ag {
+            type service-connect
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Service Connect (ssloS_CiscoFP)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_u {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_u_ag {
+            type service-connect
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Service Connect (ssloS_CiscoFP)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_ip_family_check
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_ip_family_check {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Version Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption IPv4
+            expression "expr { [ IP::version ] == 4 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_protocol_lookup_4
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_protocol_lookup_4 {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_protocol_lookup_4_ag {
+            type l7-protocol-lookup
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "L7 Protocol Lookup"
+    color 1
+    item-type action
+    rules {
+        {
+            caption "HTTP(S) and HTTP Connect"
+            expression "expr { [mcget {perflow.l7_protocol_lookup.result}] == \"https\" || [mcget {perflow.l7_protocol_lookup.result}] == \"http\" || [mcget {perflow.l7_protocol_lookup.result}] == \"http-connect\" }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_svc_connect_4_t
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_svc_connect_4_t {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_svc_connect_4_t_ag {
+            type service-connect
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Service Connect (ssloS_SquidProxy)"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_ip_family_check
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_act_variable_assign {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_act_variable_assign_ag {
+            type variable-assign
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Variable Assign"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_mac_sslos_ciscofp
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_mac_sslos_ciscofp {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloS_CiscoFP
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_mac_sslos_squidproxy
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_mac_sslos_squidproxy {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloS_SquidProxy
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_act_variable_assign
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_act_variable_assign {
+    agents {
+        /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_act_variable_assign_ag {
+            type variable-assign
+        }
+    }
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "Variable Assign"
+    color 1
+    item-type action
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_out
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_ent {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption In
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_mac_sslos_ciscofp
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_mac_sslos_ciscofp {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption ssloS_CiscoFP
+    color 1
+    item-type macro-call
+    macro /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_macro_policy
+    rules {
+        {
+            caption Out
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_act_variable_assign
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_out {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption Out
+    color 1
+    item-type terminal-out
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicitfinance_bypass_act_ip_protocol_lookup {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Protocol Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_mac_categorization
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_finance_bypass_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicitpinners_rule_act_ip_protocol_lookup {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    caption "IP Protocol Check"
+    color 1
+    item-type action
+    rules {
+        {
+            caption TCP
+            expression "expr { [ IP::protocol ] == 6 }"
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_ssl_check
+        }
+        {
+            caption fallback
+            next-item /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_out_failed
+        }
+    }
+}
+apm policy policy-item /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_end_allow {
+    agents {
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_end_allow_ag {
+            type ending-allow
+        }
+    }
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    caption Allow
+    color 1
+    item-type ending
+}
+apm policy policy-item /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_ent {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    caption Start
+    color 1
+    rules {
+        {
+            caption fallback
+            next-item /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_end_allow
+        }
+    }
+}
+apm policy agent aaa-active-directory /Common/f5labs-ntlm-ap_act_active_directory_query_ag {
+    fetch-nested-groups true
+    fetch-primary-group true
+    query-attrname { cn displayName distinguishedName dn employeeID givenName homeMDB mail memberOf mobile msDS-ResultantPSO name objectGUID otherMobile pager primaryGroupID pwdLastSet sAMAccountName sn telephoneNumber userAccountControl userPrincipalName }
+    server /Common/f5labs_ad_aaa
+    type query
+}
+apm policy agent category-lookup /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_2_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    input http-connect-host
+}
+apm policy agent category-lookup /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_category_lookup_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent category-lookup /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_sni_category_lookup_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent ending-allow /Common/f5labs-ntlm-ap_end_allow_ag { }
+apm policy agent ending-allow /Common/ssloDefault_end_allow_ag { }
+apm policy agent ending-allow /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_allow_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent ending-allow /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_end_allow_ag {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+}
+apm policy agent ending-deny /Common/f5labs-ntlm-ap_end_deny_ag {
+    customization-group /Common/f5labs-ntlm-ap_end_deny_ag
+}
+apm policy agent ending-deny /Common/ssloDefault_end_deny_ag {
+    customization-group /Common/ssloDefault_end_deny_ag_logout
+}
+apm policy agent ending-redirect /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_redirect_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    close-session false
+    url "%{perflow.ending.redirect.captive.url}"
+}
+apm policy agent ending-reject /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_end_reject_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent irule-event /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_irule_event_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    expect-data client-accepted
+    id sslo_get_category
+}
+apm policy agent l7-protocol-lookup /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_l7_protocol_lookup_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent l7-protocol-lookup /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_protocol_lookup_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent l7-protocol-lookup /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_protocol_lookup_4_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent service-connect /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_t_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    connector-profile /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-4-connector
+}
+apm policy agent service-connect /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_4_u_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    connector-profile /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-4-connector
+}
+apm policy agent service-connect /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_t_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    connector-profile /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-6-connector
+}
+apm policy agent service-connect /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_ciscofp_act_svc_connect_6_u_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    connector-profile /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-6-connector
+}
+apm policy agent service-connect /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslos_squidproxy_act_svc_connect_4_t_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    connector-profile /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-t-4-connector
+}
+apm policy agent session-check /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_session_check_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent ssl-bypass-set /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_1_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent ssl-bypass-set /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy_act_ssl_bypass_set_2_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent ssl-check /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_ssl_check_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent ssl-check /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_pinners_rule_act_ssl_check_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+}
+apm policy agent variable-assign /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_categorization_act_variable_assign_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    variables {
+        {
+            expression "mcget {perflow.custom}"
+            varname perflow.category_lookup.result.categories
+        }
+        {
+            expression "mcget {perflow.scratchpad}"
+            varname perflow.category_lookup.result.primarycategory
+        }
+    }
+}
+apm policy agent variable-assign /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_all_services_act_variable_assign_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    variables {
+        {
+            expression "return {ssloSC_All_Services}"
+            varname perflow.service_path
+        }
+    }
+}
+apm policy agent variable-assign /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_sslosc_ciscofp_tap_act_variable_assign_ag {
+    app-service /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit
+    variables {
+        {
+            expression "return {ssloSC_CiscoFP_TAP}"
+            varname perflow.service_path
+        }
+    }
+}
+apm profile access /Common/f5labs-ntlm-ap {
+    accept-languages { en }
+    access-policy /Common/f5labs-ntlm-ap
+    app-service none
+    customization-group /Common/f5labs-ntlm-ap_logout
+    customization-key bfdff4adc9beddd5dd32d25fe3aa82e3
+    default-language en
+    eps-group /Common/f5labs-ntlm-ap_eps
+    errormap-group /Common/f5labs-ntlm-ap_errormap
+    framework-installation-group /Common/f5labs-ntlm-ap_framework_installation
+    general-ui-group /Common/f5labs-ntlm-ap_general_ui
+    generation 2
+    generation-action noop
+    log-settings {
+        /Common/default-log-setting
+    }
+    logout-uri-include none
+    modified-since-last-policy-sync true
+    named-scope none
+    ntlm-auth-name /Common/f5labs.com_ntlm_aaa
+    scope profile
+    type swg-explicit
+    user-identity-method credentials
+}
+apm profile access /Common/ssloDefault_accessProfile {
+    accept-languages { en }
+    access-policy /Common/ssloDefault_accessPolicy
+    app-service none
+    customization-group /Common/ssloDefault_logout
+    customization-key f2cd74f2cacc3361f887a83b7cb9ec5e
+    defaults-from /Common/access
+    domain-cookie none
+    domain-mode single-domain
+    eps-group /Common/ssloDefault_accessProfile_eps
+    errormap-group /Common/ssloDefault_accessProfile_errormap
+    framework-installation-group /Common/ssloDefault_accessProfile_framework_installation
+    general-ui-group /Common/ssloDefault_accessProfile_general_ui
+    generation 1
+    generation-action noop
+    log-settings {
+        /Common/default-sslo-log-setting
+    }
+    persistent-cookie true
+    scope public
+    type ssl-orchestrator
+    user-identity-method http
+}
+apm profile access /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_accessProfile {
+    accept-languages { en }
+    access-policy /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_accessPolicy
+    access-policy-timeout 300
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    customization-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_logout
+    customization-key 1b200ddc68b368935c62fb1deb76d69e
+    default-language en
+    defaults-from /Common/access
+    domain-cookie none
+    domain-mode single-domain
+    enforce-policy true
+    eps-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_unknown_customization
+    errormap-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_accessProfile_errormap
+    exchange-profile none
+    framework-installation-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_framework_installation
+    general-ui-group /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_general_ui
+    generation 6
+    generation-action noop
+    httponly-cookie false
+    inactivity-timeout 900
+    log-settings {
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-log-setting
+    }
+    logout-uri-include none
+    logout-uri-timeout 5
+    max-concurrent-sessions 0
+    max-concurrent-users 0
+    max-failure-delay 5
+    max-in-progress-sessions 128
+    max-session-timeout 604800
+    min-failure-delay 2
+    named-scope none
+    ntlm-auth-name none
+    oauth-profile none
+    persistent-cookie true
+    primary-auth-service none
+    restrict-to-single-client-ip false
+    scope public
+    secure-cookie true
+    sso-name none
+    type ssl-orchestrator
+    use-http-503-on-error false
+    user-identity-method http
+}
+apm report default-report {
+    report-name sessionReports/sessionSummary
+    user /Common/admin
+}
+ilx global-settings {
+    debug-port-blacklist { 47019 54321 60000 }
+}
+ltm default-node-monitor {
+    rule none
+}
+ltm node /Common/10.1.10.50 {
+    address 10.1.10.50
+}
+ltm node /Common/ssloS_CiscoFP.app/198.19.0.10 {
+    address 198.19.0.10
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+}
+ltm node /Common/ssloS_CiscoFP.app/2001:0200:0:0100::a {
+    address 2001:200:0:100::a
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+}
+ltm node /Common/ssloS_SquidProxy.app/198.19.96.66 {
+    address 198.19.96.66
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+}
+ltm pool /Common/siem-hsl-pool {
+    members {
+        /Common/10.1.10.50:514 {
+            address 10.1.10.50
+        }
+    }
+    monitor /Common/gateway_icmp
+}
+ltm pool /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-4 {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    members {
+        /Common/ssloS_CiscoFP.app/198.19.0.10:0 {
+            address 198.19.0.10
+            app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+        }
+    }
+    slow-ramp-time 300
+}
+ltm pool /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-6 {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    members {
+        /Common/ssloS_CiscoFP.app/2001:0200:0:0100::a.0 {
+            address 2001:200:0:100::a
+            app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+        }
+    }
+    slow-ramp-time 300
+}
+ltm pool /Common/ssloS_SquidProxy.app/ssloS_SquidProxy {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+    load-balancing-mode predictive-node
+    members {
+        /Common/ssloS_SquidProxy.app/198.19.96.66:3128 {
+            address 198.19.96.66
+            app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+        }
+    }
+    monitor min 1 of { /Common/gateway_icmp }
+}
+ltm rule /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ilD {
+
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+}
+ltm rule /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ilD_auth {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when HTTP_REQUEST {
+    HTTP::header remove "X-Authenticated-User"
+}
+}
+ltm rule /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ilS_auth {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when HTTP_REQUEST {
+    if { [ACCESS::session exists] } {
+        set sessionID [ACCESS::session sid]
+        set user [ACCESS::session data get "session.logon.last.username"]
+        HTTP::header insert "X-Authenticated-User" $user
+    }
+}
+}
+ltm rule /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-in_t {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when CLIENT_ACCEPTED {
+ SSL::disable clientside
+ SSL::disable serverside
+ HTTP::disable
+
+ sharedvar ctx
+
+ set ctx(log) 2
+ set srcIP [IP::client_addr]
+ set dstIP [IP::local_addr]
+ set srcPort [TCP::client_port]
+ set dstPort [TCP::local_port]
+ set ctx(SNI) ""
+ set ctx(ptcl) "unknown"
+ set ctx(xpinfo) ""
+
+ sharedvar XPHOST
+ if { [info exists XPHOST] } {
+  if { $XPHOST eq "" } {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 0 "CLIENT_ACCEPTED invalid host (${XPHOST}) for explicit-proxy client ${srcIP}_${srcPort}"
+   TCP::respond "HTTP/1.1 500 Server Error\r\nConnection: close\r\n\r\n"
+   TCP::close
+   return
+  }
+
+  if {$ctx(log)} {
+   set ctx(xpinfo) "\x20explicit-proxy request ${XPHOST}"
+  }
+
+  set ctx(ptcl) "http"
+ } else {
+  # maintain the next two lists in lockstep (!)
+  if {[set x [lsearch -integer -sorted [list 21 22 25 53 80 110 115 143 443 465 587 990 993 995 3128 8080] [TCP::local_port]]] >= 0} {
+   set ctx(ptcl) [lindex [list "ftp" "ssh" "smtp" "dns" "http" "pop3" "sftp" "imap" "https" "smtps" "smtp" "ftps" "imaps" "pop3s" "http" "http"] $x]
+  }
+ }
+
+ if {$ctx(log) > 1} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENT_ACCEPTED TCP from ${srcIP}_${srcPort} to ${dstIP}_${dstPort}${ctx(xpinfo)} L7 guess=$ctx(ptcl)"
+ }
+
+ TCP::collect 1 0 ; # dispatch probe
+} ; #CLIENT_ACCEPTED
+
+
+when SERVER_CONNECTED {
+ if { not [info exists ctx(csf)] } {
+  #initial connection, currently a probe, listen for SSF
+  TCP::collect 1
+ }
+
+ if {$ctx(log) > 1} {
+  set didsnat ""
+  set snatIP [IP::local_addr]
+  set snatPort [TCP::local_port]
+  if {($snatIP ne $srcIP) || ($snatPort ne $srcPort)} {
+   # even when we do not deliberately SNAT (e.g., when in split mode)
+   # TMOS may give us a fresh client ephemeral port.  Possible reasons
+   # include DAG on the exit VLAN and "at the moment, the requested
+   # client port belongs to the TCB for an earlier connection now
+   # stuck in TCP TIME/WAIT state"
+   set didsnat "SNAT ${snatIP}_${snatPort}"
+  }
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "SERVER_CONNECTED ${srcIP}_${srcPort} to ${dstIP}_${dstPort} ${didsnat}"
+ }
+} ; #SERVER_CONNECTED
+
+when SERVER_DATA {
+ set len [TCP::payload length]
+ if { [info exists ctx(csf)] } {
+  #someone beat us to it
+  TCP::release
+  return
+ } elseif {!$len} {
+  if {$ctx(log) > 1} {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "SERVER_DATA got empty payload, retrying"
+  }
+  TCP::collect
+  return
+ } elseif {[info exists proxyconnect] && ($proxyconnect)} {
+  TCP::release
+  TCP::collect
+  return
+ } else {
+  set ctx(ssf) true
+  set said [TCP::payload]
+ }
+
+ set ctx(ptcl) [call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::ssf_ptcl $ctx(ptcl) $said]
+
+ call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "SERVER_DATA server spoke first ${len} bytes, L7 guess=$ctx(ptcl)"
+
+ TCP::release
+} ; #SERVER_DATA
+
+when HTTP_PROXY_CONNECT  {
+ set proxyconnect true
+}
+
+when HTTP_PROXY_RESPONSE {
+  set proxyconnect false
+}
+
+when HTTP_REQUEST {
+ if {[HTTP::method] eq "CONNECT"} {
+  if {$ctx(log) > 1} {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "HTTP_REQUEST [HTTP::method] [HTTP::uri] $dstIP:$dstPort."
+  }
+  set connhost "" ; set connport ""
+  if {[regexp {^([A-Za-z\d\.-]+):(\d+)} [HTTP::uri] junk connhost connport] ||
+      [regexp {^\[([a-fA-F\d:]+)\]:(\d+)} [HTTP::uri] junk connhost connport]} {
+   set connhost [string tolower $connhost]
+  } else { unset connhost; unset connport }
+ } else {
+   event HTTP_RESPONSE_RELEASE disable
+ }
+} ; #HTTP_REQUEST
+
+when HTTP_RESPONSE_RELEASE {
+ if { [HTTP::status] == 200 } {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "HTTP_RESPONSE_RELEASE HTTP CONNECT success. Ready for HTTP tunnel."
+  set ctx(httpconn) 1
+  SSL::disable clientside
+  SSL::disable serverside
+
+  if { [info exists ctx(csf)] } {
+   unset ctx(csf)
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "HTTP_RESPONSE_RELEASE HTTP-CONNECT $connhost:$connport, L7 guess=$ctx(ptcl)"
+  }
+  if { [info exists ctx(ssf)] } {
+   unset ctx(ssf)
+  }
+:
+  TCP::collect
+  serverside {TCP::collect}
+ } else {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "HTTP_RESPONSE_RELEASE HTTP response code [HTTP::status]."
+ }
+} ; #HTTP_RESPONSE_RELEASE
+
+when CLIENT_DATA {
+ set len [TCP::payload length]
+ if { [info exists ctx(ssf)] } {
+  #someone beat us to it
+  TCP::release
+  return
+ } elseif {!$len} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENT_DATA got empty payload, retrying"
+  TCP::collect
+  return
+ } else {
+  set ctx(csf) true
+  set said [TCP::payload]
+  # release accepted event, if held, to proxy for creating connection to server
+  TCP::release 0
+ }
+
+ # got at least one octet
+
+ if {($len < 44) &&
+     ( ([binary scan $said c type] == 1) &&
+       (($type & 0xff) == 22) )} {
+  # may be partial TLS Client Hello (unusual)
+  # allow up to 7 seconds for the rest to arrive
+  # by modifying the connection idle timer. This will be
+  # reset after we get the complete hello (or plaintext data)
+  if {$ctx(log) > 1} {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENT_DATA Incomplete Client Hello, set idle timeout to 7 sec"
+  }
+  set ipIdleTmo [IP::idle_timeout]
+  IP::idle_timeout 7
+ } ; #(partial Client Hello)
+
+ if {[info exists ctx(httpconn)] && ([ACCESS::perflow get perflow.ssl_bypass_set] == 1)} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENT_DATA SSL bypass set inside HTTP CONNECT"
+  CONNECTOR::enable
+ }
+
+ SSL::enable clientside
+
+ after 0 { TCP::release }
+} ; #CLIENT_DATA
+
+
+when CLIENTSSL_PASSTHROUGH {
+ #Reset connection idle timer
+ if {[info exists ipIdleTmo]} {
+  IP::idle_timeout $ipIdleTmo
+ }
+
+ #csf_ptcl needs at least 8 bytes for http traffic to find the
+ #http method. SSL ingress processing ensures we have at least
+ #9 bytes before it calls CLIENTSSL_PASSTHROUGH. So, we don't
+ #need any timers to collect data here, however, add a check
+ #in case ssl behavior changes.
+ if {($ctx(ptcl) eq "http" || $ctx(ptcl) eq "https") && ${len} < 8} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "CLIENTSSL_PASSTHROUGH http insuffient bytes ${len}"
+  reject
+  return
+ }
+
+ # not TLS
+ set ctx(ptcl) [call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::csf_ptcl $ctx(ptcl) $said $len]
+ call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENTSSL_PASSTHROUGH client spoke first ${len} bytes, not TLS, L7 guess=$ctx(ptcl)"
+ #Explicit proxy connection
+ if { $ctx(ptcl) eq "http-connect" } {
+  if { [info exists ctx(httpconn)] } {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "CLIENTSSL_PASSTHROUGH Recursive HTTP CONNECT is not supported. Reject."
+   reject
+   return
+  }
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENTSSL_PASSTHROUGH Monitoring CONNECT handshake."
+  if {[PROFILE::exists http]} {
+   HTTP::enable
+  }
+  return
+ }
+}
+
+when CLIENTSSL_CLIENTHELLO {
+ #Reset connection idle timer
+ if {[info exists ipIdleTmo]} {
+  IP::idle_timeout $ipIdleTmo
+ }
+
+ if {$ctx(log) > 1} {
+  if {[SSL::extensions exists -type 0]} {
+   binary scan [SSL::extensions -type 0] @9a* SNI
+   if {[regexp {(?i)[^a-z0-9.-]} $SNI]} {
+    call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "CLIENTSSL_CLIENTHELLO client offered bogus SNI"
+   } else {
+    set ctx(SNI) [string tolower $SNI]
+   }
+  }
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENTSSL_CLIENTHELLO client spoke [SSL::cipher version] Client Hello ${len} bytes, SNI='$ctx(SNI)', L7 guess=$ctx(ptcl), pre-HS"
+ }
+
+ SSL::enable serverside
+} ; #CLIENTSSL_CLIENTHELLO
+
+
+when CLIENTSSL_HANDSHAKE {
+ SSL::unclean_shutdown enable
+
+ if {$ctx(log) > 1} {
+  set m [expr {($ctx(SNI) eq "") ? "NO_SNI" : $ctx(SNI)}]
+  append m "-[SSL::cipher version]-[SSL::cipher name]-[SSL::cipher bits]"
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENTSSL_HANDSHAKE ${m}"
+ }
+
+ set clientssl_handshake 1
+ if { [info exists serverssl_data_collected] } {
+  peer { SSL::release }
+ }
+
+ SSL::collect
+} ; #CLIENTSSL_HANDSHAKE
+
+
+when CLIENTSSL_DATA {
+ #Get inner protocol
+ set inner_ptcl [call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::csf_ptcl $ctx(ptcl) [SSL::payload] [SSL::payload length]]
+
+ #HTTP CONNECT inside SSL?
+ if { $inner_ptcl eq "http-connect" } {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "CLIENTSSL_DATA Detected HTTP CONNECT inside TLS. Reject."
+  reject
+  return
+ }
+
+ if { [info exists ctx(httpconn)] } {
+  # Not enabling HTTP on CONNECT tunnel data
+  HTTP::disable
+ }
+
+ if { [info exists ctx(ssf_ssl)] } {
+  SSL::release
+  return
+ } else {
+  set ctx(csf_ssl) true
+ }
+
+ # If csf_ptcl returns incomplete, then there is insufficient data collected
+ # to determine HTTP method (this could be for example due to split HTTP
+ # requests to prevent BEAST attack). Set a timer to collect more bytes.
+ # If timer expires, then release whatever data we got to process further.
+ if { $inner_ptcl eq "incomplete" } {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENTSSL_DATA ${srcIP}_${srcPort} to ${dstIP}_${dstPort} insufficient decrypted SSL payload, set timer"
+  if { ![info exists rccollecttmr] } {
+   set rccollecttmr [after 1000 {
+    call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "CLIENTSSL_DATA ${srcIP}_${srcPort} to ${dstIP}_${dstPort} 1234 insufficient decrypted SSL payload, reset L7 ptcl to unknown"
+    set ctx(ptcl) "unknown"
+    unset rccollecttmr
+    event CLIENTSSL_DATA disable ; # prevent more CLIENTSSL_DATA event
+    SSL::release
+   }]
+  }
+  return
+ }
+ if {[info exists rccollecttmr]} {
+  after cancel $rccollecttmr
+  unset rccollecttmr
+ }
+
+ # Update ctx(ptcl) to the inner protocol unless this is http.
+ # For http, update to https
+ if { $inner_ptcl ne "http" } {
+  set ctx(ptcl) $inner_ptcl
+ } else {
+  set ctx(ptcl) "https"
+ }
+
+ event CLIENTSSL_DATA disable ; # prevent more CLIENTSSL_DATA event
+
+ if {$ctx(log) > 1} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "CLIENTSSL_DATA client spoke first within TLS [SSL::payload length] bytes, inner-protocol $inner_ptcl, L7 guess=$ctx(ptcl), post-HS"
+ }
+
+ SSL::release
+} ; #CLIENTSSL_DATA
+
+when SERVERSSL_HANDSHAKE {
+ SSL::unclean_shutdown enable
+ SSL::collect
+} ; #SERVERSSL_HANDSHAKE
+
+when L7CHECK_CLIENT_DATA {
+  L7CHECK::protocol set $ctx(ptcl)
+  if { $ctx(ptcl) eq "http" || $ctx(ptcl) eq "https" } {
+   catch {
+    HTTP::enable
+    CONNECTOR::enable
+   }
+  }
+}
+
+when L7CHECK_SERVER_DATA {
+  L7CHECK::protocol set $ctx(ptcl)
+}
+
+when SERVERSSL_DATA {
+ if { [info exists ctx(csf_ssl)] } {
+  SSL::release
+  return
+ } else {
+  set ctx(ssf_ssl) true
+ }
+
+ set ctx(ptcl) [call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::ssf_ptcl $ctx(ptcl) [SSL::payload]]
+ if {$ctx(ptcl) eq "imap"} {
+  set ctx(ptcl) "imaps"
+ } elseif {$ctx(ptcl) eq "smtp"} {
+  set ctx(ptcl) "smtps"
+ } elseif {$ctx(ptcl) eq "pop3"} {
+  set ctx(ptcl) "pop3s"
+ } elseif {$ctx(ptcl) eq "ftp"} {
+  set ctx(ptcl) "ftps"
+ }
+
+ if {$ctx(log) > 1} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "SERVERSSL_DATA server spoke first within TLS [SSL::payload length] bytes, L7 guess=$ctx(ptcl)"
+ }
+
+ if { [info exists clientssl_handshake] } {
+  SSL::release
+ } else {
+  set serverssl_data_collected 1
+ }
+} ; #SERVERSSL_DATA
+
+when ACCESS_PER_REQUEST_AGENT_EVENT {
+    switch [ACCESS::perflow get perflow.irule_agent_id] {
+        "sslo_get_category" {
+            call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::store_host_header $said
+        }
+        default {
+        }
+    }
+}
+}
+ltm rule /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+# emit a log message
+# uses ACCESS::log ssl-orchestrator.[debug|notice|error] $msg to make use of
+# the Common Logging Framework
+proc log {level msg} {
+ if {$msg eq ""} { return }
+
+ if {$level == 0} {
+  ACCESS::log ssl-orchestrator.error "[virtual] $msg"
+ } elseif {$level == 1} {
+  ACCESS::log ssl-orchestrator.notice "[virtual] $msg"
+ } elseif {$level == 2} {
+  ACCESS::log ssl-orchestrator.debug "[virtual] $msg"
+ }
+} ; #proc log
+
+# try to ascertain protocol from first few bytes that server
+# sent. If unrecognized, return value of argument ptcl, else
+# suitable protocol string
+proc ssf_ptcl {ptcl taste} {
+ if {[regexp {^(220 .+ (ESMTP|\*) (OK|NO|BAD) ).*\r\n$} $taste]} {
+  # looks like SMTP (not a complete test)
+  return "smtp"
+ }
+ if {[string first "SSH-2.0-" $taste] == 0} {
+  #looks like SSH
+  return "ssh"
+ }
+ return $ptcl
+} ; #proc ssf_ptcl
+
+
+# try to ascertain protocol from first few bytes that client
+# sent. If unrecognized, return value of argument ptcl, else
+# suitable protocol string.
+#
+# For test against expected http methods, make sure we have enough
+# data "mincollectlen" bytes for comparison to be valid. If not, set
+# ptcl so caller can collect more data. Note that "mincollectlen"
+# is set to 8 which is the longest http method aka "PROPFIND". If we
+# update the expected set of http methods, we need to make sure
+# that "mincollectlen" is updated, as needed.
+proc csf_ptcl {ptcl taste len} {
+ if {[regexp {^([A-Z]+) (?:/|https?://|[A-Za-z\d-]{1,63}[.]|\[[a-fA-F\d:]+\]|(?:[*]\x20))} $taste junk method]} {
+  # looks like HTTP (not a complete test because we are disinclined
+  # to accumulate client data looking for full HTTP request)
+  if { $method eq "CONNECT" } {
+   return "http-connect"
+  }
+  if {([lsearch -exact -sorted {DELETE GET HEAD LOCK
+   OPTIONS PATCH POST PROPFIND PUT TRACE UNLOCK} $method] >= 0)} {
+   return "http"
+  }
+ }
+ if {$ptcl eq "http" || $ptcl eq "https" || $ptcl eq "http-connect"} {
+  if { $len < 8 } {
+   set ptcl "incomplete"
+  } else {
+   set ptcl "unknown"
+  }
+  return $ptcl
+ }
+ if {[string first "SSH-2.0-" $taste] == 0} {
+  #looks like SSH, which is ssf (chuckle) so we shouldn't be here,
+  #but in future after we hear from server we may check on what
+  #client says to better discriminate application protocol (like
+  #if server says SSH-2.0 and client says SSH-1.99 we suspect older
+  #client, maybe vulnerable to protocol downgrade attack)
+  return "ssh"
+ }
+ return $ptcl
+} ; #proc csf_ptcl
+
+proc store_host_header said {
+ if {[regexp {^([A-Z]+) (?:/|https?://|[A-Za-z\d-]{1,63}[.]|\[[a-fA-F\d:]+\]|(?:[*]\x20))} $said junk method] &&
+     ([lsearch -exact -sorted {CONNECT DELETE GET HEAD LOCK OPTIONS PATCH POST PROPFIND PUT TRACE UNLOCK} $method] >= 0)} {
+  set host_hdr [findstr ${said} "Host: " 6 "\r\n"]
+  if { [SSL::mode] == 0 } {
+   set scheme "http://"
+  } else {
+   set scheme "https://"
+  }
+  if { ${host_hdr} ne "" } {
+   set cat_result [CATEGORY::lookup "${scheme}${host_hdr}/" -id request_default_and_custom]
+   set custom "| [join ${cat_result} { | }] |"
+   set scratchpad [lindex ${cat_result} 0]
+   if { ${custom} eq "|  |" } {
+    set custom "| 153 |"
+    set scratchpad "153"
+   }
+   ACCESS::perflow set perflow.custom ${custom}
+   ACCESS::perflow set perflow.scratchpad ${scratchpad}
+ } else {
+   # Empty host header found"
+  }
+ } else {
+  # Not HTTP or HTTPS, or unable to parse header."
+ }
+} ; #proc store_host_header
+}
+ltm rule /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+
+when CLIENT_ACCEPTED {
+ if {![regexp {^(.+)-[^/-]+-[^/-]+$} [virtual] myvs mypfx]} {
+  call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 0 "CLIENT_ACCEPTED cannot parse virtual-server name (client [IP::client_addr])"
+  reject
+  return
+ }
+
+ set ctx(log) 2
+
+ set qry [expr {([set af [IP::version]] == 4) ? "-a" : "-aaaa"}]
+
+ sharedvar XPHOST
+
+ set dom "?" ; set addr "?" ; set port "?"
+
+ set prev_server ""
+} ; #CLIENT_ACCEPTED
+
+when HTTP_PROXY_REQUEST {
+ if {[HTTP::method] eq "CONNECT"} {
+  # HTTP Profile will forward via tunnel to transparent proxy
+
+  # ?? perhaps we could pass target hostname to transparent
+  # proxy for use like SNI, in case client doesn't supply
+  # SNI (with the optimization that since we resolve name,
+  # DDB need not resolve it) ??
+
+  if {$prev_server ne ""} {
+   if {![catch {IP::server_addr} tmp] && ($tmp ne "0")} {
+    LB::detach
+   }
+  }
+  return
+ }
+
+ #otherwise
+ for {} 1 {break} {
+  if {([set dom [string tolower [URI::host [HTTP::uri]]]] eq "") ||
+      ([string length $dom] > 253) ||
+      ![regexp {^((\x5b[0-9a-f:.]{1,45}\x5d)|[a-z0-9.-]+)$} $dom]} {
+   #(we only check for really arrogant attacks on our resolver)
+   set dom [string range $dom 0 253]
+   set e "Cannot decode explicit-proxy request hostname"
+   set rslt 400
+   break
+  }
+
+  if {[string range $dom 0 0] eq "\x5b"} {
+   set addr [string range $dom 1 end-1]
+
+   ##############################################################
+   # we should be able to support IPv4 client to IPv6 server    #
+   # but that will require some additional code                 #
+   #                                                            #
+
+   if {$af == 4} {
+    set e "Cannot explicit-proxy IPv4 client to IPv6 literal host"
+    set rslt 501
+    break
+   }
+
+   #                                                            #
+   ##############################################################
+  } elseif {[regexp {^([0-9]{1,3}[.]){3}[0-9]{1,3}$} $dom]} {
+   set addr $dom
+  } elseif {[string is integer -strict $dom]} {
+   set e "Explicit proxy to pure numeric IPv4 literal forbidden"
+   set rslt 403
+   break
+  } elseif {[catch "RESOLV::lookup ${qry} ${dom}" addrs] ||
+            ([set addr [lindex $addrs 0]] eq "")} {
+   set e "Cannot resolve hostname '${dom}' in explicit-proxy request"
+   set rslt 404
+   break
+  }
+:
+  if {( ($af == 4) &&
+        ( [IP::addr $addr equals 0.0.0.0/32] ||
+          [IP::addr $addr equals 127.0.0.0/8] ||
+          [IP::addr $addr equals 169.254.0.0/16] ||
+          [IP::addr $addr equals 224.0.0.0/3] ) ) ||
+      ( ($af == 6) &&
+        ( ([string first ":" $addr] < 0) ||
+          [IP::addr $addr equals ::/16] ||
+          [IP::addr $addr equals fe80::/10] ||
+          [IP::addr $addr equals ff00::/8] ) )} {
+   # we refuse loopback or multicast targets, and IPv4 within IPv6 brackets
+   set e "Explicit proxy to non-unicast IP address forbidden"
+   set rslt 403
+   break
+  }
+
+  # iRules URI::port command returns 80/443 for empty http/https port
+  if {[set port [URI::port [HTTP::uri]]] eq "0"} {
+   set e "Explicit proxy server port not recognized"
+   set rslt 403
+   break
+  }
+  set server "${dom}:${port}"
+
+  if {([set h [string tolower [HTTP::host]]] ne "") &&
+      ( ([string length $h] > 259) ||
+        ( (([set x [string first "\x5d" $h]] > 0) || [set x 1]) &&
+          ( (([string first ":" $h $x] > 0) || ([append h ":80"] ne "")) &&
+            ($h ne $server) ) ) )} {
+   # someone is trying to trick us
+   set e "Explicit-proxy request hostname and Host header disagree"
+   set rslt 403
+   break
+  }
+
+  if {$server ne $prev_server} {
+   if {($prev_server ne "") &&
+       ![catch {IP::server_addr} tmp] && ($tmp ne "0")} {
+    LB::detach
+   }
+   set prev_server $server
+
+   # inform transparent virtual of requested destination
+   set XPHOST $dom
+
+   virtual "${mypfx}-in-t-[IP::version]" $addr $port
+  }
+  return
+ } ; #do-once
+
+ if {[info exists e] && ($e ne "")} {
+  if {[info exists rslt] &&
+      ( [catch {HTTP::respond $rslt content "${e}.\n" Content-Type "text/plain; charset=UTF8" Connection close}] ||
+        [catch {HTTP::close}] )} {
+   reject
+  }
+  if {$ctx(log)} {
+   call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 1 "HTTP_PROXY_REQUEST ${e} ([IP::client_addr]_[TCP::client_port] to '${dom}' ${addr}_${port})"
+  }
+ }
+} ; #HTTP_PROXY_REQUEST
+
+when HTTP_REQUEST {
+ virtual "${mypfx}-in-t-[IP::version]" [HTTP::proxy addr] [HTTP::proxy port]
+}
+}
+ltm rule /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp_auth {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+# Copyright (c) 2018.  F5 Networks, Inc.  See End User License Agreement (EULA) for license terms.
+# Notwithstanding anything to the contrary in the EULA, Licensee may copy and modify
+# this software product for its internal business purposes. Further, Licensee may upload,
+# publish and distribute the modified version of the software product on devcentral.f5.com.
+when ACCESS_ACL_ALLOWED {
+   set addr [HTTP::proxy addr]
+   set port [HTTP::proxy port]
+   if {$ctx(log) > 1} {
+      call /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-lib::log 2 "ACCESS_ACL_ALLOWED HTTP proxy DNS resolves connection to $addr:$port"
+   }
+   virtual "${mypfx}-in-t-[IP::version]" $addr $port
+}
+}
+ltm virtual /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-4 {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    clone-pools {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-4 {
+            context serverside
+        }
+    }
+    creation-time 2021-01-21:11:04:39
+    description "Receive-only service (2021-1-21 11:04:33)"
+    destination /Common/0.0.0.0:0
+    internal
+    ip-protocol tcp
+    last-modified-time 2021-01-21:11:04:39
+    mask any
+    profiles {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-service { }
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-tcp-lan {
+            context clientside
+        }
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-tcp-wan {
+            context serverside
+        }
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address disabled
+    translate-port disabled
+    vlans-enabled
+}
+ltm virtual /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-6 {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    clone-pools {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-6 {
+            context serverside
+        }
+    }
+    creation-time 2021-01-21:11:04:39
+    description "Receive-only service (2021-1-21 11:04:33)"
+    destination /Common/0.0.0.0:0
+    internal
+    ip-protocol tcp
+    last-modified-time 2021-01-21:11:04:39
+    mask any
+    profiles {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-service { }
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-tcp-lan {
+            context clientside
+        }
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-tcp-wan {
+            context serverside
+        }
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address disabled
+    translate-port disabled
+    vlans-enabled
+}
+ltm virtual /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-4 {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    clone-pools {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-4 {
+            context serverside
+        }
+    }
+    creation-time 2021-01-21:11:04:39
+    description "Receive-only service (2021-1-21 11:04:33)"
+    destination /Common/0.0.0.0:0
+    internal
+    ip-protocol udp
+    last-modified-time 2021-01-21:11:04:39
+    mask any
+    profiles {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-service { }
+        /Common/udp { }
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address disabled
+    translate-port disabled
+    vlans-enabled
+}
+ltm virtual /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-6 {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    clone-pools {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-6 {
+            context serverside
+        }
+    }
+    creation-time 2021-01-21:11:04:39
+    description "Receive-only service (2021-1-21 11:04:33)"
+    destination /Common/0.0.0.0:0
+    internal
+    ip-protocol udp
+    last-modified-time 2021-01-21:11:04:39
+    mask any
+    profiles {
+        /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-service { }
+        /Common/udp { }
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address disabled
+    translate-port disabled
+    vlans-enabled
+}
+ltm virtual /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-D-0-t-4 {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+    creation-time 2020-04-23:10:35:37
+    description "In-line service (2021-1-21 11:43:08)"
+    destination /Common/0.0.0.0:0
+    ip-protocol tcp
+    last-modified-time 2021-01-21:11:43:14
+    mask any
+    profiles {
+        /Common/http { }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-service { }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ss-server {
+            context clientside
+        }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-tcp-lan {
+            context clientside
+        }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-tcp-wan {
+            context serverside
+        }
+    }
+    rules {
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ilD_auth
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address disabled
+    translate-port disabled
+    vlans {
+        /Common/ssloN_Proxy_out.app/ssloN_Proxy_out
+    }
+    vlans-enabled
+}
+ltm virtual /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-t-4 {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+    creation-time 2020-04-23:10:35:37
+    description "In-line service (2021-1-21 11:43:08)"
+    destination /Common/0.0.0.0:0
+    internal
+    ip-protocol tcp
+    last-modified-time 2021-01-21:11:43:14
+    mask any
+    pool /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+    profiles {
+        /Common/http { }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-service { }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ss-client {
+            context serverside
+        }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-tcp-lan {
+            context clientside
+        }
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-tcp-wan {
+            context serverside
+        }
+    }
+    rules {
+        /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-ilS_auth
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address enabled
+    translate-port enabled
+    vlans-enabled
+}
+ltm virtual /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-in-t-4 {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    creation-time 2020-02-27:14:26:56
+    description "transparent proxy (2021-1-21 11:33:22)"
+    destination /Common/0.0.0.0:0
+    ip-protocol tcp
+    last-modified-time 2021-01-21:11:33:29
+    mask any
+    per-flow-request-access-policy /Common/ssloP_f5labs_explicit.app/ssloP_f5labs_explicit_per_req_policy
+    profiles {
+        /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit-cssl-vhf {
+            context clientside
+        }
+        /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit-sssl-vhf {
+            context serverside
+        }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-http { }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-http-proxy-connect { }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-tcp-lan {
+            context clientside
+        }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-tcp-wan {
+            context serverside
+        }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit_accessProfile { }
+    }
+    rules {
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-in_t
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    source-address-translation {
+        type automap
+    }
+    translate-address disabled
+    translate-port disabled
+    vlans {
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp-tunnel
+    }
+    vlans-enabled
+}
+ltm virtual /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp-4 {
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    creation-time 2020-02-27:14:26:56
+    description "explicit proxy (2021-1-21 11:33:22)"
+    destination /Common/10.1.10.150:3128
+    ip-protocol tcp
+    last-modified-time 2021-01-21:11:33:29
+    mask 255.255.255.255
+    profiles {
+        /Common/f5labs-ntlm-ap { }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-tcp-lan { }
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp-http { }
+    }
+    rules {
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp
+        /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-xp_auth
+    }
+    serverssl-use-sni disabled
+    source 0.0.0.0/0
+    translate-address enabled
+    translate-port enabled
+    vlans {
+        /Common/client-vlan
+    }
+    vlans-enabled
+}
+ltm virtual-address /Common/0.0.0.0 {
+    address any
+    arp disabled
+    auto-delete false
+    icmp-echo disabled
+    mask any
+    server-scope none
+    traffic-group /Common/traffic-group-1
+}
+ltm virtual-address /Common/10.1.10.150 {
+    address 10.1.10.150
+    arp enabled
+    mask 255.255.255.255
+    traffic-group /Common/traffic-group-1
+}
+ltm classification auto-update settings {
+    auto-update-interval weekly
+    enabled no
+}
+ltm data-group internal /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-service {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+    records {
+        70 {
+            data "ssloS_SquidProxy 0 1"
+        }
+    }
+    type string
+}
+ltm profile client-ssl /Common/sslo-default-clientssl {
+    app-service none
+    cert-key-chain {
+        default {
+            cert /Common/default.crt
+            key /Common/default.key
+        }
+    }
+    defaults-from /Common/clientssl
+    inherit-ca-certkeychain true
+    inherit-certkeychain true
+}
+ltm profile client-ssl /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit-cssl-vhf {
+    allow-non-ssl enabled
+    app-service /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit
+    bypass-on-client-cert-fail disabled
+    bypass-on-handshake-alert disabled
+    cert-extension-includes { basic-constraints extended-key-usage subject-alternative-name }
+    cert-key-chain {
+        CA_CERT_KEY_CHAIN_0 {
+            app-service /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit
+            cert /Common/subrsa.f5labs.com
+            key /Common/subrsa.f5labs.com
+            usage CA
+        }
+        CERT_KEY_CHAIN_0 {
+            app-service /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit
+            cert /Common/default.crt
+            key /Common/default.key
+        }
+    }
+    cipher-group none
+    ciphers DEFAULT
+    defaults-from /Common/sslo-default-clientssl
+    forward-proxy-bypass-default-action intercept
+    inherit-ca-certkeychain false
+    inherit-certkeychain false
+    options { dont-insert-empty-fragments no-tlsv1.3 }
+    ssl-c3d disabled
+    ssl-forward-proxy enabled
+    ssl-forward-proxy-bypass enabled
+    ssl-forward-proxy-verified-handshake disabled
+    unclean-shutdown disabled
+}
+ltm profile client-ssl /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit-cssl-vht {
+    allow-non-ssl enabled
+    app-service /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit
+    bypass-on-client-cert-fail disabled
+    bypass-on-handshake-alert disabled
+    cert-extension-includes { basic-constraints extended-key-usage subject-alternative-name }
+    cert-key-chain {
+        CA_CERT_KEY_CHAIN_0 {
+            app-service /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit
+            cert /Common/subrsa.f5labs.com
+            key /Common/subrsa.f5labs.com
+            usage CA
+        }
+        CERT_KEY_CHAIN_0 {
+            app-service /Common/ssloT_f5labs_explicit.app/ssloT_f5labs_explicit
+            cert /Common/default.crt
+            key /Common/default.key
+        }
+    }
+    cipher-group none
+    ciphers DEFAULT
+    defaults-from /Common/sslo-default-clientssl
+    forward-proxy-bypass-default-action intercept
+    inherit-ca-certkeychain false
+    inherit-certkeychain false
+    options { dont-insert-empty-fragments no-tlsv1.3 }
+    ssl-c3d disabled
+    ssl-forward-proxy enabled
+    ssl-forward-proxy-bypass enabled
+    ssl-forward-proxy-verified-handshake enabled
+    unclean-shutdown disabled
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-4-connector {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-4
+    service-down-action ignore
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-6-connector {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-6
+    service-down-action ignore
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-4-connector {
+    ssl-forward-proxy-verified-handshake enabled
+    unclean-shutdown disabled
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-4-connector {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-4
+    service-down-action ignore
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-6-connector {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-t-6
+    service-down-action ignore
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-4-connector {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-4
+    service-down-action ignore
+}
+ltm profile connector /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-6-connector {
+    app-service /Common/ssloS_CiscoFP.app/ssloS_CiscoFP
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_CiscoFP.app/ssloS_CiscoFP-u-6
+    service-down-action ignore
+}
+ltm profile connector /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-t-4-connector {
+    app-service /Common/ssloS_SquidProxy.app/ssloS_SquidProxy
+    connection-timeout 0
+    entry-virtual-server /Common/ssloS_SquidProxy.app/ssloS_SquidProxy-t-4
+    service-down-action ignore
+}
+ltm profile fastl4 /Common/sslo-default-fastL4 {
+    app-service none
+    defaults-from /Common/fastL4
+}
+ltm profile ftp /Common/sslo-default-ftp {
+    app-service none
+    defaults-from /Common/ftp
+}
+ltm profile http /Common/sslo-default-http {
+    app-service none
+    defaults-from /Common/http
+}
+ltm profile http /Common/sslo-default-http-explicit {
+    app-service none
+    defaults-from /Common/http-explicit
+    explicit-proxy {
+        dns-resolver /Common/ssloGS_global.app/ssloGS-net-resolver
+    }
+}
+ltm profile http /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit-http {
+    accept-xff disabled
+    app-service /Common/sslo_f5labs_explicit.app/sslo_f5labs_explicit
+    basic-auth-realm none
+    defaults-from /Common/sslo-default-http
+    description none
+    encrypt-cookie-secret none
+    encrypt-cookies none
+    enforcement {
+        max-header-count 128
+        max-header-size 65536
+        max-requests 0
+    }
+    fallback-host none
+    fallback-status-codes none
+    header-erase none
+    header-insert none
+    insert-xforwarded-for disabled
+    lws-separator none
+    lws-width 80
+    oneconnect-status-reuse "200 206"
+    
